@@ -1,2 +1,7 @@
 node_modules/
 .eslint.config.mjs
+.env
+.DS_Store
+*.log
+npm-debug.log*
+coverage
