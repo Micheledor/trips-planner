@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "setup": "node setup.js"
   },
   "repository": {
     "type": "git",
@@ -20,10 +21,14 @@
   "homepage": "https://github.com/Micheledor/trips-planner#readme",
   "dependencies": {
     "@fastify/autoload": "^6.0.2",
+    "@fastify/mysql": "^5.0.1",
     "await-to-js": "^3.0.0",
+    "docker": "^1.0.0",
+    "docker-compose": "^1.1.0",
     "dotenv": "^16.4.5",
     "fastify": "^5.1.0",
     "fluent-json-schema": "^5.0.0",
+    "mysql2": "^3.11.4",
     "undici": "^6.20.1",
     "url": "^0.11.4"
   },

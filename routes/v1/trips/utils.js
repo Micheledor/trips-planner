@@ -1,5 +1,4 @@
 export function buildURL(query) {
-  console.log('Query: ', query);
   const { origin, destination, sort_by } = query;
   return `${process.env.API_BASE_URL}?origin=${origin}&destination=${destination}&sort_by=${sort_by}`;
 };

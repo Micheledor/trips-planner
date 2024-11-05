@@ -4,12 +4,10 @@ import { getTripsSchema } from './schema.js';
 import { buildURL, buildOptions, sortResponse } from './utils.js';
 
 export default async (fastify) => {
-
   fastify.get('/iamalive', async (_, res) => res.code(200).send('ok'));
 
   fastify.get('/', { schema: getTripsSchema }, async (req, res) => {
     const { query } = req;
-    console.log('Query: ', query);
 
     const url = buildURL(query);
     const options = buildOptions();
