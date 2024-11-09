@@ -32,9 +32,18 @@ export function formatBody(body) {
     origin: body.origin,
     destination: body.destination,
     cost: body.cost,
+    type: body.type,
     duration: body.duration,
     display_name: body.display_name,
     saved_at: new Date(),
   };
   return formattedBody;
-}
+};
+
+export function formatResponse(savedTrip) {
+  const response = {
+    status: savedTrip.upsertedCount ? 'created' : 'updated',
+    message: savedTrip.upsertedCount ? 'Favourite trip created' : 'Favourite trip updated',
+  }
+  return response;
+};

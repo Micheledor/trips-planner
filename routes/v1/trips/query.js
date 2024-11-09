@@ -9,3 +9,13 @@ export function addFavouriteTrip(mongo, body) {
 
   return result;
 };
+
+export function getAirports(mongo, query) {
+  const collection = mongo.db.collection('airports');
+
+  const result = collection.find({
+    code: { $in: [query.origin, query.destination] }
+  });
+
+  return result.toArray();
+}
