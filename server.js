@@ -16,6 +16,7 @@ export default async function createServer() {
   await app.register(mysql, {
     connectionString: process.env.MYSQL_URL,
     promise: true,
+    typeCast: true,
   });
 
   await setupDatabase(app.mysql);
@@ -24,7 +25,7 @@ export default async function createServer() {
     dir: path.join(__dirname, 'routes'),
     routeParams: true,
     dirNameRoutePrefix: true,
-    ignorePattern: /.*(schema|test|utils).js/,
+    ignorePattern: /.*(schema|test|utils|query).js/,
   });
 
   return app;

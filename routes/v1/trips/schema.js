@@ -9,7 +9,7 @@ const getTripsSchema = {
     200:
       S.array().items(
         S.object()
-          .prop('id', S.string())
+          .prop('service_id', S.string())
           .prop('type', S.string())
           .prop('origin', S.string())
           .prop('destination', S.string())
@@ -20,6 +20,19 @@ const getTripsSchema = {
   },
 };
 
+const postTripsSchema = {
+  body: S.object()
+    .prop('origin', S.string().required())
+    .prop('destination', S.string().required())
+    .prop('cost', S.number().required())
+    .prop('duration', S.number().required())
+    .prop('display_name', S.string().required()),
+  response: {
+    204: S.null(),
+  },
+};
+
 export {
   getTripsSchema,
+  postTripsSchema
 };

@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Micheledor/trips-planner#readme",
   "dependencies": {
     "@fastify/autoload": "^6.0.2",
+    "@fastify/mongodb": "^9.0.1",
     "@fastify/mysql": "^5.0.1",
     "await-to-js": "^3.0.0",
     "docker": "^1.0.0",

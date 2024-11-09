@@ -6,7 +6,9 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y default-mysql-client curl && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY . .
 

@@ -7,15 +7,16 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    env_file: 
-      - .env
     environment:
       DB_HOST: db
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
+    networks:
+      - app-network
     volumes:
       - .:/usr/src/app
+    command: "npm start"
 
   db:
     image: mysql:latest
@@ -26,8 +27,14 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
+    networks:
+      - app-network
     volumes:
       - db_data:/var/lib/mysql
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   db_data:
