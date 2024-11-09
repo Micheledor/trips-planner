@@ -26,15 +26,24 @@ export function sortResponse(trips, query) {
   return sort_by === 'cost' ? trips.sort((a, b) => a.cost - b.cost) : trips.sort((a, b) => a.duration - b.duration);
 };
 
-export function manageErrors(error, res) {
-  const errorBody = {};
-  console.log('ERROR:: ', error)
-  if (error.errno === 1062) {
-    errorBody.status = 400;
-    errorBody.message = 'This record already exists';
-  } else {
-    errorBody.status = 500;
-    errorBody.message = 'Server error';
+export function formatBody(body) {
+  const formattedBody = {
+    resource_id: body.id,
+    origin: body.origin,
+    destination: body.destination,
+    cost: body.cost,
+    type: body.type,
+    duration: body.duration,
+    display_name: body.display_name,
+    saved_at: new Date(),
   };
-  return res.code(errorBody.status).send(errorBody);
+  return formattedBody;
+};
+
+export function formatResponse(savedTrip) {
+  const response = {
+    status: savedTrip.upsertedCount ? 'created' : 'updated',
+    message: savedTrip.upsertedCount ? 'Favourite trip created' : 'Favourite trip updated',
+  }
+  return response;
 };

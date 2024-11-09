@@ -1,10 +1,21 @@
-export function addFavouriteTrip(mysql, body) {
+export function addFavouriteTrip(mongo, body) {
+  const collection = mongo.db.collection('favourites');
 
-  const updateBody = {
-    ...body,
-    saved_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
-  };
+  const result = collection.updateOne(
+    { resource_id: body.resource_id },
+    { $setOnInsert: body },
+    { upsert: true },
+  );
 
-  const query = `INSERT INTO favourite_trips SET ?`;
-  return mysql.query(query, updateBody);
+  return result;
 };
+
+export function getAirports(mongo, query) {
+  const collection = mongo.db.collection('airports');
+
+  const result = collection.find({
+    code: { $in: [query.origin, query.destination] }
+  });
+
+  return result.toArray();
+}

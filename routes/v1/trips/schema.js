@@ -9,7 +9,7 @@ const getTripsSchema = {
     200:
       S.array().items(
         S.object()
-          .prop('service_id', S.string())
+          .prop('id', S.string())
           .prop('type', S.string())
           .prop('origin', S.string())
           .prop('destination', S.string())

@@ -1,10 +1,9 @@
 import 'dotenv/config';
 import fastify from 'fastify';
 import autoload from '@fastify/autoload';
-import mysql from '@fastify/mysql';
+import mongo from '@fastify/mongodb';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { setupDatabase } from './setup.js';
 
 export default async function createServer() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -13,13 +12,13 @@ export default async function createServer() {
     logger: true,
   });
 
-  await app.register(mysql, {
-    connectionString: process.env.MYSQL_URL,
-    promise: true,
-    typeCast: true,
+  app.register(mongo, () => {
+    return {
+      forceClose: true,
+      maxPoolSize: 10,
+      url: process.env.MONGODB_URL,
+    };
   });
-
-  await setupDatabase(app.mysql);
 
   app.register(autoload, {
     dir: path.join(__dirname, 'routes'),
