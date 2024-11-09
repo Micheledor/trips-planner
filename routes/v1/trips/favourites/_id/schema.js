@@ -1,7 +1,8 @@
 import S from 'fluent-json-schema';
 
-const getFavouriteTripsSchema = {
-  // Potentially useful to add some queryparams here, like a sort_by
+const deleteFavouriteTripsSchema = {
+  params: S.object()
+    .prop('id', S.string().required()),
   response: {
     200:
       S.array().items(
@@ -20,5 +21,5 @@ const getFavouriteTripsSchema = {
 };
 
 export {
-  getFavouriteTripsSchema,
+  deleteFavouriteTripsSchema,
 };
