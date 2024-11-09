@@ -47,3 +47,7 @@ export function formatResponse(savedTrip) {
   }
   return response;
 };
+
+export function generateCacheKey(query) {
+  return `${query.origin}-${query.destination}-${query.sort_by}`;
+}

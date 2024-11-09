@@ -1,14 +1,22 @@
 import undici from 'undici';
 import { to } from 'await-to-js';
 import { getTripsSchema } from './schema.js';
-import { buildConfig, sortResponse } from './utils.js';
+import { buildConfig, sortResponse, generateCacheKey } from './utils.js';
 import { getAirports } from './query.js';
+
+let cache = {};
 
 export default async (fastify) => {
   fastify.get('/iamalive', async (_, res) => res.code(200).send('ok'));
 
   fastify.get('/', { schema: getTripsSchema }, async (req, res) => {
     const { query } = req;
+
+    const cacheKey = generateCacheKey(query);
+    res.header('cache-control', 'max-age=3600');
+    if (cache[cacheKey]) {
+      return res.code(200).send(cache[cacheKey]);
+    }
 
     const [airportsError, airports] = await to(getAirports(fastify.mongo, query));
     if (airportsError) res.code(500).send(airportsError);
@@ -23,6 +31,8 @@ export default async (fastify) => {
     if (tripsError) res.code(500).send(tripsError);
 
     const response = sortResponse(trips, query);
+
+    cache[cacheKey] = response;
 
     res.code(200).send(response);
   });
