@@ -49,5 +49,7 @@ export function formatResponse(savedTrip) {
 };
 
 export function generateCacheKey(query) {
-  return `${query.origin}-${query.destination}-${query.sort_by}`;
-}
+  const { origin, destination, ...otherParams } = query;
+  const paramsString = Object.entries(otherParams).sort().map(([key, value]) => `${key}=${value}`).join('&');
+  return `${origin}-${destination}?${paramsString}`;
+};
