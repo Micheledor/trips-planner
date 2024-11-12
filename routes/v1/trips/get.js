@@ -9,7 +9,7 @@ let cache = {};
 export default async (fastify) => {
   fastify.get('/iamalive', async (_, res) => res.code(200).send('ok'));
 
-  fastify.get('/', async (req, res) => {
+  fastify.get('/', { schema: getTripsSchema }, async (req, res) => {
     const { query } = req;
 
     const page = parseInt(query.page) || 1;
@@ -43,8 +43,8 @@ export default async (fastify) => {
       data: paginatedData,
       page,
       per_page: limit,
-      total: totalResults,
-      totalPages: Math.ceil(totalResults / limit),
+      total_elements: totalResults,
+      total_pages: Math.ceil(totalResults / limit),
     };
 
     cache[cacheKey] = paginatedResponse;
