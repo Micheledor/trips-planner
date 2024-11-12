@@ -18,4 +18,4 @@ export function getAirports(mongo, query) {
   });
 
   return result.toArray();
-}
+};
