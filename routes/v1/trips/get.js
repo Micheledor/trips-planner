@@ -28,10 +28,9 @@ export default async (fastify) => {
 
     const requestConfig = buildConfig(req);
 
-    const [apiError, apiResponse] = await to(undici.request(requestConfig.url, requestConfig.options));
-    if (apiError) return res.code(500).send(apiError);
-
-    const [tripsError, trips] = await to(apiResponse.body.json());
+    const [tripsError, trips] = await to(
+      undici.request(requestConfig.url, requestConfig.options).then((response) => response.body.json())
+    );
     if (tripsError) return res.code(500).send(tripsError);
 
     const sortedTrips = sortResponse(trips, query);

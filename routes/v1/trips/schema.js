@@ -29,13 +29,18 @@ const getTripsSchema = {
 
 const postTripsSchema = {
   body: S.object()
-    .prop('origin', S.string().required())
-    .prop('destination', S.string().required())
-    .prop('cost', S.number().required())
-    .prop('duration', S.number().required())
-    .prop('display_name', S.string().required()),
+    .prop('bizaway_id', S.string().required()),
   response: {
-    204: S.null(),
+    201:
+      S.object()
+        .prop('_id', S.string())
+        .prop('bizaway_id', S.string())
+        .prop('type', S.string())
+        .prop('origin', S.string())
+        .prop('destination', S.string())
+        .prop('cost', S.number())
+        .prop('duration', S.number())
+        .prop('display_name', S.string()),
   },
 };
 
