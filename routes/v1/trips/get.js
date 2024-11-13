@@ -2,7 +2,6 @@ import undici from 'undici';
 import { to } from 'await-to-js';
 import { getTripsSchema } from './schema.js';
 import { buildConfig, sortResponse, generateCacheKey } from './utils.js';
-import { getAirports } from './query.js';
 
 let cache = {};
 
@@ -11,9 +10,13 @@ export default async (fastify) => {
 
   fastify.get('/', { schema: getTripsSchema }, async (req, res) => {
     const { query } = req;
+    const { locationCache } = fastify;
 
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.per_page) || 10;
+
+    if (!locationCache[query.origin]) return res.code(400).send('Invalid origin');
+    if (!locationCache[query.destination]) return res.code(400).send('Invalid destination');
 
     const cacheKey = generateCacheKey(query);
     res.header('cache-control', 'max-age=3600');
@@ -21,10 +24,6 @@ export default async (fastify) => {
     if (cache[cacheKey]) {
       return res.code(200).send(cache[cacheKey]);
     }
-
-    const [airportsError, airports] = await to(getAirports(fastify.mongo, query));
-    if (airportsError) res.code(500).send(airportsError);
-    if (airports.length !== 2) res.code(400).send('Invalid origin or destination');
 
     const requestConfig = buildConfig(req);
 

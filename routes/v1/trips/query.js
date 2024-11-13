@@ -1,6 +1,4 @@
 export function addFavouriteTrip(mongo, bizaway_id, body) {
-  body.bizaway_id = bizaway_id;
-
   const collection = mongo.db.collection('favourites');
 
   const result = collection.findOneAndUpdate(
@@ -20,16 +18,4 @@ export function addFavouriteTrip(mongo, bizaway_id, body) {
     },
   );
   return result;
-};
-
-export function getAirports(mongo, query) {
-  const collection = mongo.db.collection('airports');
-
-  const result = collection.find({
-    code: {
-      $in: [query.origin, query.destination],
-    },
-  });
-
-  return result.toArray();
 };
