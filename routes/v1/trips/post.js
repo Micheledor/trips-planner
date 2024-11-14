@@ -1,11 +1,11 @@
 import undici from 'undici';
 import { to } from 'await-to-js';
-import { postTripsSchema } from './schema.js';
+import { postTripSchema } from './schema.js';
 import { addFavouriteTrip } from './query.js';
 import { buildConfig } from './utils.js'
 
 export default async (fastify) => {
-  fastify.post('/', { schema: postTripsSchema }, async (req, res) => {
+  fastify.post('/', { schema: postTripSchema }, async (req, res) => {
     const bizawayId = req.body.bizaway_id;
     const requestConfig = buildConfig(req);
 

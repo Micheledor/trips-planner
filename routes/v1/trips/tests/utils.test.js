@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import { buildConfig, sortResponse, generateCacheKey } from '../utils.js';
 
-test('buildConfig should return correct config for GET requests', (t) => {
+test('buildConfig should return correct config for GET requests', () => {
   const req = {
     method: 'GET',
     query: {
