@@ -1,5 +1,7 @@
 export function addFavouriteTrip(mongo, bizaway_id, body) {
   const collection = mongo.db.collection('favourites');
+  delete body.id;
+  delete body.bizaway_id;
 
   const result = collection.findOneAndUpdate(
     {
