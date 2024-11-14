@@ -17,5 +17,6 @@ export function addFavouriteTrip(mongo, bizaway_id, body) {
       returnDocument: 'after',
     },
   );
+
   return result;
 };

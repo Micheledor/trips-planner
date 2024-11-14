@@ -15,6 +15,7 @@ export default async (fastify) => {
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.per_page) || 10;
 
+    if (query.origin === query.destination) return res.code(400).send('Origin and destination cannot be the same');
     if (!locationCache[query.origin]) return res.code(400).send('Invalid origin');
     if (!locationCache[query.destination]) return res.code(400).send('Invalid destination');
 
@@ -27,10 +28,9 @@ export default async (fastify) => {
 
     const requestConfig = buildConfig(req);
 
-    const [tripsError, trips] = await to(
-      undici.request(requestConfig.url, requestConfig.options).then((response) => response.body.json())
-    );
-    if (tripsError) return res.code(500).send(tripsError);
+    const [_, bizResponse] = await to(undici.request(requestConfig.url, requestConfig.options));
+    const [__, trips] = await to(bizResponse.body.json());
+    if (bizResponse.statusCode !== 200) return res.code(bizResponse.statusCode).send(trips.msg);
 
     const sortedTrips = sortResponse(trips, query);
 
