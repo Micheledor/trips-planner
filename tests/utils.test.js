@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import test from 'node:test';
 import assert from 'node:assert';
-import { buildConfig, sortResponse, generateCacheKey } from '../utils.js';
+import { buildConfig, sortResponse, generateCacheKey } from '../routes/v1/trips/utils.js';
 
 test('buildConfig should return correct config for GET requests', () => {
   const req = {

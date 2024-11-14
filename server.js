@@ -17,12 +17,10 @@ export default async function createServer() {
 
   app.decorate('locationCache', locationCache);
 
-  app.register(mongo, () => {
-    return {
-      forceClose: true,
-      maxPoolSize: 10,
-      url: process.env.MONGODB_URL,
-    };
+  app.register(mongo, {
+    forceClose: true,
+    maxPoolSize: 10,
+    url: process.env.MONGODB_URL,
   });
 
   app.register(autoload, {

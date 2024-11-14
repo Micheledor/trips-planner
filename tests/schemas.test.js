@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert';
-import { getTripsSchema, postTripSchema } from '../schema.js';
+import { getTripsSchema, postTripSchema } from '.././routes/v1/trips/schema.js';
 
 test('getTripsSchema should validate query', (t) => {
   const query = getTripsSchema.query._getState();
