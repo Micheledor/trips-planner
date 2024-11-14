@@ -1,4 +1,3 @@
-
 const buildURL = (req) => {
   if (req.method === 'GET') {
     const { origin, destination, sort_by } = req.query;
