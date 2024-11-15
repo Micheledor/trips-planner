@@ -1,28 +1,12 @@
 import 'dotenv/config';
 import test from 'node:test';
 import assert from 'node:assert';
-import fastify from 'fastify';
-import mongo from '@fastify/mongodb';
 import { to } from 'await-to-js';
+import { queriesSetup, queriesTeardown } from './utils.js';
 import { getSupportedLocations } from '../utils/query.js';
 import { addFavouriteTrip } from '../routes/v1/trips/query.js';
 import { getFavouriteTrips } from '../routes/v1/trips/favourites/query.js';
 import { removeFavouriteTrip } from '../routes/v1/trips/favourites/_id/query.js';
-
-const setup = async () => {
-  const server = fastify();
-  server.register(mongo, {
-    forceClose: true,
-    maxPoolSize: 10,
-    url: process.env.MONGODB_URL_TEST,
-  });
-  await server.listen({ port: 0, host: '0.0.0.0' });
-  return server;
-};
-
-const teardown = async (server) => {
-  await server.close();
-};
 
 test('Queries', async (t) => {
   let server;
@@ -30,7 +14,7 @@ test('Queries', async (t) => {
   let newTripId;
 
   await t.test('before hook', async () => {
-    server = await setup();
+    server = await queriesSetup();
   });
 
   await t.test('getSupportedLocations should return all locations', async () => {
@@ -112,6 +96,6 @@ test('Queries', async (t) => {
   });
 
   await t.test('after hook', async () => {
-    await teardown(server);
+    await queriesTeardown(server);
   });
 });
