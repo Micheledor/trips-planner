@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import { getTripsSchema, postTripSchema } from '.././routes/v1/trips/schema.js';
+import { getFavouriteTripsSchema } from '.././routes/v1/trips/favourites/schema.js';
+import { deleteFavouriteTripsSchema } from '.././routes/v1/trips/favourites/_id/schema.js';
 
 test('Schemas', async (t) => {
   await t.test('getTripsSchema should validate query', (t) => {
@@ -66,5 +68,49 @@ test('Schemas', async (t) => {
     assert.deepEqual(properties[5], { name: 'cost', type: 'number' });
     assert.deepEqual(properties[6], { name: 'duration', type: 'number' });
     assert.deepEqual(properties[7], { name: 'display_name', type: 'string' });
+  });
+
+  await t.test('getFavouriteTripsSchema should validate response', (t) => {
+    const response = getFavouriteTripsSchema.response['200']._getState();
+    const { items, type } = response;
+
+    assert.equal(type, 'array');
+    assert.equal(items.type, 'object');
+    assert.equal(items.properties._id.type, 'string');
+    assert.equal(items.properties.bizaway_id.type, 'string');
+    assert.equal(items.properties.type.type, 'string');
+    assert.equal(items.properties.origin.type, 'string');
+    assert.equal(items.properties.destination.type, 'string');
+    assert.equal(items.properties.cost.type, 'number');
+    assert.equal(items.properties.duration.type, 'number');
+    assert.equal(items.properties.display_name.type, 'string');
+    assert.equal(items.properties.saved_at.type, 'string');
+  });
+
+  await t.test('deleteFavouriteTripsSchema should validate params', (t) => {
+    const params = deleteFavouriteTripsSchema.params._getState();
+    const { properties, required, type } = params;
+
+    assert.equal(type, 'object');
+    assert.deepEqual(required, ['id']);
+    assert.equal(properties.length, 1);
+    assert.deepEqual(properties[0], { name: 'id', type: 'string' });
+  });
+
+  await t.test('deleteFavouriteTripsSchema should validate response', (t) => {
+    const response = deleteFavouriteTripsSchema.response['200']._getState();
+    const { items, type } = response;
+
+    assert.equal(type, 'array');
+    assert.equal(items.type, 'object');
+    assert.equal(items.properties._id.type, 'string');
+    assert.equal(items.properties.bizaway_id.type, 'string');
+    assert.equal(items.properties.type.type, 'string');
+    assert.equal(items.properties.origin.type, 'string');
+    assert.equal(items.properties.destination.type, 'string');
+    assert.equal(items.properties.cost.type, 'number');
+    assert.equal(items.properties.duration.type, 'number');
+    assert.equal(items.properties.display_name.type, 'string');
+    assert.equal(items.properties.saved_at.type, 'string');
   });
 });
