@@ -17,10 +17,10 @@ export async function queriesTeardown(server) {
   await server.close();
 };
 
-export async function appSetup() {
+export async function serverSetup() {
   return createServer();
 };
 
-export async function appTeardown(app) {
-  await app.close();
+export async function serverTeardown(server) {
+  await server.close();
 };
