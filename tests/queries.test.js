@@ -1,9 +1,8 @@
 import 'dotenv/config';
-import test, { before, after } from 'node:test';
+import test from 'node:test';
 import assert from 'node:assert';
 import fastify from 'fastify';
 import mongo from '@fastify/mongodb';
-import { ObjectId } from '@fastify/mongodb';
 import { to } from 'await-to-js';
 import { getSupportedLocations } from '../utils/query.js';
 import { addFavouriteTrip } from '../routes/v1/trips/query.js';
