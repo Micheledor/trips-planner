@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node --test --experimental-test-coverage",
+    "test": "APP_ENV=test node --test --experimental-test-coverage",
     "start": "nodemon index.js"
   },
   "repository": {

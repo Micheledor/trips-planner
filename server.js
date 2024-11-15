@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { loadSupportedLocations } from './utils/helpers.js';
 
 let locationCache = {};
+const mongoUrl = process.env.APP_ENV === 'test' ? process.env.MONGODB_URL_TEST : process.env.MONGODB_URL_STAG;
 
 export default async function createServer() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -20,7 +21,7 @@ export default async function createServer() {
   app.register(mongo, {
     forceClose: true,
     maxPoolSize: 10,
-    url: process.env.MONGODB_URL,
+    url: mongoUrl,
   });
 
   app.register(autoload, {

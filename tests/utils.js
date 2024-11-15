@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import mongo from '@fastify/mongodb';
+import createServer from '../server.js';
 
 export async function queriesSetup() {
   const server = fastify();
@@ -14,4 +15,12 @@ export async function queriesSetup() {
 
 export async function queriesTeardown(server) {
   await server.close();
+};
+
+export async function appSetup() {
+  return createServer();
+};
+
+export async function appTeardown(app) {
+  await app.close();
 };
