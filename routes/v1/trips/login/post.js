@@ -1,6 +1,6 @@
 import { to } from 'await-to-js';
 import { getUserByEmail } from './query.js';
-import { checkPassword } from './utils.js';
+import { checkPassword, generateJwtToken } from './utils.js';
 
 export default async (fastify) => {
   fastify.post('/', async (req, res) => {
@@ -15,7 +15,7 @@ export default async (fastify) => {
     if (passwordErr) res.code(500).send({ error: 'Internal Server Error' });
     if (!isPasswordCorrect) res.code(401).send({ error: 'Unauthorized' });
 
-    const token = fastify.jwt.sign({ email });
+    const token = generateJwtToken(fastify.jwt, user);
 
     res.code(200).send({ message: 'Succesful login', token });
   });
