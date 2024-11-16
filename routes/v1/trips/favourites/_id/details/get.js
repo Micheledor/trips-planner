@@ -1,7 +1,7 @@
 import { to } from 'await-to-js';
 import { getDetailedTripSchema } from './schema.js'
 import { getFavouriteTrip } from './query.js'
-import { haversineDistance, carbonEmission, formatResponse } from './utils.js'
+import { formatResponse } from './utils.js'
 
 export default async (fastify) => {
   fastify.get('/', { preHandler: fastify.authorize, schema: getDetailedTripSchema }, async (req, res) => {
@@ -12,11 +12,7 @@ export default async (fastify) => {
     const [_, trip] = await to(getFavouriteTrip(fastify.mongo, tripId, userId));
     if (!trip) return res.code(404).send('Trip not found');
 
-    const distanceKm = haversineDistance(locationCache, trip);
-    const carbonFootprintKg = carbonEmission(distanceKm, trip.type);
-
-    const formattedResponse = formatResponse(locationCache, trip, distanceKm, carbonFootprintKg);
-
+    const formattedResponse = formatResponse(locationCache, trip);
 
     return res.code(200).send(formattedResponse);
   });

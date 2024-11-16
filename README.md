@@ -1,6 +1,4 @@
 TODOS:
-- test
-- pagination util
-- authentication
-- data enrichment
 - documentation
+- validate object ids to prevent injections
+- test details

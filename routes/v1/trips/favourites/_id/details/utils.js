@@ -1,5 +1,5 @@
 
-export const haversineDistance = (locationCache, trip) => {
+const haversineDistance = (locationCache, trip) => {
   const origin = {
     lat: locationCache[trip.origin]?.location?.coordinates[1],
     lon: locationCache[trip.origin]?.location?.coordinates[0],
@@ -26,7 +26,7 @@ export const haversineDistance = (locationCache, trip) => {
   return (R * c).toFixed(2);
 };
 
-export const carbonEmission = (distance, vehicle) => {
+const carbonEmission = (distance, vehicle) => {
   const emissionFactors = {
     flight: 0.090,
     car: 0.192,
@@ -37,7 +37,10 @@ export const carbonEmission = (distance, vehicle) => {
   return (distance * emissionFactor).toFixed(2);
 };
 
-export const formatResponse = (locationCache, trip, distance, carbonFootprint) => {
+export const formatResponse = (locationCache, trip) => {
+  const distance = haversineDistance(locationCache, trip);
+  const carbonFootprint = carbonEmission(distance, trip.type);
+
   return {
     _id: trip._id,
     bizaway_id: trip.bizaway_id,
