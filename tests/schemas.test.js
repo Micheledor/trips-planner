@@ -59,7 +59,7 @@ test('Schemas', async (t) => {
     const { properties, type } = response;
 
     assert.equal(type, 'object');
-    assert.equal(properties.length, 8);
+    assert.equal(properties.length, 9);
     assert.deepEqual(properties[0], { name: '_id', type: 'string' });
     assert.deepEqual(properties[1], { name: 'bizaway_id', type: 'string' });
     assert.deepEqual(properties[2], { name: 'type', type: 'string' });
@@ -67,7 +67,8 @@ test('Schemas', async (t) => {
     assert.deepEqual(properties[4], { name: 'destination', type: 'string' });
     assert.deepEqual(properties[5], { name: 'cost', type: 'number' });
     assert.deepEqual(properties[6], { name: 'duration', type: 'number' });
-    assert.deepEqual(properties[7], { name: 'display_name', type: 'string' });
+    assert.deepEqual(properties[7], { name: 'created_at', type: 'string' });
+    assert.deepEqual(properties[8], { name: 'display_name', type: 'string' });
   });
 
   await t.test('getFavouriteTripsSchema should validate response', (t) => {
@@ -84,7 +85,7 @@ test('Schemas', async (t) => {
     assert.equal(items.properties.cost.type, 'number');
     assert.equal(items.properties.duration.type, 'number');
     assert.equal(items.properties.display_name.type, 'string');
-    assert.equal(items.properties.saved_at.type, 'string');
+    assert.equal(items.properties.created_at.type, 'string');
   });
 
   await t.test('deleteFavouriteTripsSchema should validate params', (t) => {

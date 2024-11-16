@@ -13,7 +13,7 @@ export default async function createServer() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
   const app = fastify({
-    logger: true,
+    logger: process.env.APP_ENV === 'stag',
   });
 
   app.decorate('locationCache', locationCache);
