@@ -9,7 +9,7 @@ export default async (fastify) => {
     const userId = req.user.id;
     const { locationCache } = fastify;
 
-    const [err, trip] = await to(getFavouriteTrip(fastify.mongo, tripId, userId));
+    const [_, trip] = await to(getFavouriteTrip(fastify.mongo, tripId, userId));
     if (!trip) return res.code(404).send('Trip not found');
 
     const distanceKm = haversineDistance(locationCache, trip);
