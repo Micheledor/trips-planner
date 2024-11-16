@@ -40,12 +40,11 @@ const postTripSchema = {
         .prop('destination', S.string())
         .prop('cost', S.number())
         .prop('duration', S.number())
-        .prop('created_at', S.string())
         .prop('display_name', S.string()),
   },
 };
 
 export {
   getTripsSchema,
-  postTripSchema
+  postTripSchema,
 };

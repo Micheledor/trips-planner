@@ -11,7 +11,6 @@ test('Endpoints', async (t) => {
   let mockAgent;
   let mockPool;
   let createdTripId;
-  let createdTripDate;
 
   await t.test('before hook', async () => {
     server = await serverSetup();
@@ -73,7 +72,6 @@ test('Endpoints', async (t) => {
       _id: '673686db58cf06bdf1320b12',
       bizaway_id: '330b236d-5f45-42ac-8e89-739b729e4b30',
       cost: 3799,
-      created_at: '2024-11-14T23:25:15.609Z',
       destination: 'ATL',
       display_name: 'from ARN to ATL by train',
       duration: 21,
@@ -106,12 +104,8 @@ test('Endpoints', async (t) => {
     };
 
     const responsePayload = JSON.parse(response.payload);
-
     createdTripId = responsePayload._id;
-    createdTripDate = new Date(responsePayload.created_at);
-    createdTripDate = createdTripDate.toISOString();
     expectedResponse._id = createdTripId;
-    expectedResponse.created_at = createdTripDate;
 
     assert.strictEqual(response.statusCode, 200);
     assert.deepStrictEqual(responsePayload, expectedResponse);
@@ -133,7 +127,6 @@ test('Endpoints', async (t) => {
         cost: 3799,
         duration: 21,
         display_name: 'from ARN to ATL by train',
-        created_at: '2024-11-14T23:25:15.609Z',
       },
       {
         _id: createdTripId,
@@ -144,7 +137,6 @@ test('Endpoints', async (t) => {
         cost: 2634,
         duration: 1,
         display_name: 'from BCN to DEL by car',
-        created_at: createdTripDate,
       }];
 
     assert.strictEqual(response.statusCode, 200);

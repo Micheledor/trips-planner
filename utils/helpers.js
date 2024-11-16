@@ -7,3 +7,9 @@ export async function loadSupportedLocations(mongo, locationCache) {
 
   locations.forEach((location) => locationCache[location.code] = location);
 };
+
+export async function verifyJwt(req, res) {
+  const [err, response] = await to(req.jwtVerify());
+  if (err) res.code(401).send({ message: 'Unauthorized' });
+  return response;
+};

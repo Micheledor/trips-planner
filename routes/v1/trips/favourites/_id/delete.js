@@ -3,12 +3,13 @@ import { deleteFavouriteTripsSchema } from './schema.js'
 import { removeFavouriteTrip } from './query.js'
 
 export default async (fastify) => {
-  fastify.delete('/', { schema: deleteFavouriteTripsSchema }, async (req, res) => {
+  fastify.delete('/', { preHandler: fastify.authorize, schema: deleteFavouriteTripsSchema }, async (req, res) => {
     const tripId = req.params.id;
-    const [err, trips] = await to(removeFavouriteTrip(fastify.mongo, tripId));
-    if (err) res.code(400).send(err);
-    if (!trips.deletedCount) return res.code(404).send('No favourite trips found');
+    const userId = req.user.id;
 
-    res.code(204).send('Trip succesfully deleted');
+    const [err, _] = await to(removeFavouriteTrip(fastify.mongo, tripId, userId));
+    if (err) return res.code(404).send(err);
+
+    return res.code(204).send('Trip succesfully deleted');
   });
 };
