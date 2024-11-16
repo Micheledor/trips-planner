@@ -31,7 +31,7 @@ export default async (fastify) => {
     const [_, bizResponse] = await to(undici.request(requestConfig.url, requestConfig.options));
     const [__, trips] = await to(bizResponse.body.json());
     if (bizResponse.statusCode !== 200) return res.code(bizResponse.statusCode).send(trips.msg);
-    // if (!trips.length) return res.code(200).send([]);
+    if (trips.length === 0) return res.code(404).send('No trips found');
 
     const sortedTrips = sortResponse(trips, query);
 
@@ -48,6 +48,6 @@ export default async (fastify) => {
 
     cache[cacheKey] = paginatedResponse;
 
-    res.code(200).send(paginatedResponse);
+    return res.code(200).send(paginatedResponse);
   });
 };

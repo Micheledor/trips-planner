@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import { MockAgent } from 'undici';
+import { ObjectId } from '@fastify/mongodb';
 import { serverSetup, serverTeardown } from './utils.js';
 import getFromAtlToBcn from './mocks/getFromAtlToBcn.js';
 import postFromArnToAtl from './mocks/postFromArnToAtl.js';
@@ -11,6 +12,7 @@ test('Endpoints', async (t) => {
   let mockAgent;
   let mockPool;
   let createdTripId;
+  let bearerToken;
 
   await t.test('before hook', async () => {
     server = await serverSetup();
@@ -41,6 +43,50 @@ test('Endpoints', async (t) => {
       .reply(200, postFromBcnToDel);
   });
 
+  await t.test('POST registration', async (t) => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/v1/trips/register',
+      payload: {
+        email: 'michele.test@gmail.com',
+        password: 'password',
+      },
+    });
+
+
+    assert.strictEqual(response.statusCode, 201);
+    assert.strictEqual(JSON.parse(response.payload).message, 'Successful registration');
+  });
+
+  await t.test('POST login - wrong password', async (t) => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/v1/trips/login',
+      payload: {
+        email: 'michele.test@gmail.com',
+        password: 'wrongpassword',
+      },
+    });
+
+    assert.strictEqual(response.statusCode, 401);
+  });
+
+  await t.test('POST login', async (t) => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/v1/trips/login',
+      payload: {
+        email: 'michele.test@gmail.com',
+        password: 'password',
+      },
+    });
+
+    assert.strictEqual(response.statusCode, 200);
+    assert.ok(response.payload.includes('token'));
+
+    bearerToken = JSON.parse(response.payload).token;
+  });
+
   await t.test('GET trips', async (t) => {
     const response = await server.inject({
       method: 'GET',
@@ -59,10 +105,36 @@ test('Endpoints', async (t) => {
     assert.deepStrictEqual(JSON.parse(response.payload), expectedResponse);
   });
 
+  await t.test('POST trip - wrong bizAway id', async (t) => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/v1/trips',
+      headers: { Authorization: `Bearer ${bearerToken}` },
+      payload: {
+        bizaway_id: 'wrong-id',
+      },
+    });
+
+    assert.strictEqual(response.statusCode, 400);
+  });
+
+  await t.test('POST trip - no token', async (t) => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/v1/trips',
+      payload: {
+        bizaway_id: '330b236d-5f45-42ac-8e89-739b729e4b30',
+      },
+    });
+
+    assert.strictEqual(response.statusCode, 401);
+  });
+
   await t.test('POST trip - update', async (t) => {
     const response = await server.inject({
       method: 'POST',
       url: '/v1/trips',
+      headers: { Authorization: `Bearer ${bearerToken}` },
       payload: {
         bizaway_id: '330b236d-5f45-42ac-8e89-739b729e4b30',
       },
@@ -87,6 +159,7 @@ test('Endpoints', async (t) => {
     const response = await server.inject({
       method: 'POST',
       url: '/v1/trips',
+      headers: { Authorization: `Bearer ${bearerToken}` },
       payload: {
         bizaway_id: '7ec09a82-547f-4a8c-b4bb-4902fa49d43d',
       },
@@ -111,10 +184,20 @@ test('Endpoints', async (t) => {
     assert.deepStrictEqual(responsePayload, expectedResponse);
   });
 
+  await t.test('GET favourite trips - no token', async (t) => {
+    const response = await server.inject({
+      method: 'GET',
+      url: `/v1/trips/favourites`,
+    });
+
+    assert.strictEqual(response.statusCode, 401);
+  });
+
   await t.test('GET favourite trips', async (t) => {
     const response = await server.inject({
       method: 'GET',
       url: '/v1/trips/favourites',
+      headers: { Authorization: `Bearer ${bearerToken}` },
     });
 
     const expectedResponse = [
@@ -143,16 +226,28 @@ test('Endpoints', async (t) => {
     assert.deepStrictEqual(JSON.parse(response.payload), expectedResponse);
   });
 
-  await t.test('DELETE favourite trip', async (t) => {
+  await t.test('DELETE favourite trip - no token', async (t) => {
     const response = await server.inject({
       method: 'DELETE',
       url: `/v1/trips/favourites/${createdTripId}`,
+    });
+
+    assert.strictEqual(response.statusCode, 401);
+  });
+
+  await t.test('DELETE favourite trip', async (t) => {
+    const response = await server.inject({
+      method: 'DELETE',
+      url: `/v1/trips/favourites/673686db58cf06bdf1320b12`,
+      headers: { Authorization: `Bearer ${bearerToken}` },
     });
 
     assert.strictEqual(response.statusCode, 204);
   });
 
   await t.test('after hook', async () => {
+    await server.mongo.db.collection('users').findOneAndDelete({ email: 'michele.test@gmail.com' });
+    await server.mongo.db.collection('favourites').findOneAndDelete({ _id: new ObjectId(createdTripId) });
     await mockAgent.close();
     await serverTeardown(server);
   });

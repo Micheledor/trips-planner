@@ -19,6 +19,6 @@ export default async (fastify) => {
 
     const token = fastify.jwt.sign({ username: newUser.username });
 
-    return res.code(200).send({ message: 'Successful registration', token });
+    return res.code(201).send({ message: 'Successful registration' });
   });
 };
