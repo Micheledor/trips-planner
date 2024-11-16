@@ -8,9 +8,9 @@ export default async (fastify) => {
     const userId = req.user.id;
 
     const [err, trips] = await to(getFavouriteTrips(fastify.mongo, userId));
-    if (err) res.code(400).send(err);
+    if (err) return res.code(400).send(err);
     if (trips.length === 0) return res.code(404).send('No favourite trips found');
 
-    res.code(200).send(trips);
+    return res.code(200).send(trips);
   });
 };

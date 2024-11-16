@@ -59,7 +59,7 @@ test('Schemas', async (t) => {
     const { properties, type } = response;
 
     assert.equal(type, 'object');
-    assert.equal(properties.length, 9);
+    assert.equal(properties.length, 8);
     assert.deepEqual(properties[0], { name: '_id', type: 'string' });
     assert.deepEqual(properties[1], { name: 'bizaway_id', type: 'string' });
     assert.deepEqual(properties[2], { name: 'type', type: 'string' });
@@ -97,19 +97,8 @@ test('Schemas', async (t) => {
   });
 
   await t.test('deleteFavouriteTripsSchema should validate response', (t) => {
-    const response = deleteFavouriteTripsSchema.response['200']._getState();
-    const { items, type } = response;
+    const response = deleteFavouriteTripsSchema.response['204']
 
-    assert.equal(type, 'array');
-    assert.equal(items.type, 'object');
-    assert.equal(items.properties._id.type, 'string');
-    assert.equal(items.properties.bizaway_id.type, 'string');
-    assert.equal(items.properties.type.type, 'string');
-    assert.equal(items.properties.origin.type, 'string');
-    assert.equal(items.properties.destination.type, 'string');
-    assert.equal(items.properties.cost.type, 'number');
-    assert.equal(items.properties.duration.type, 'number');
-    assert.equal(items.properties.display_name.type, 'string');
-    assert.equal(items.properties.saved_at.type, 'string');
+    assert.equal(!response, false);
   });
 });

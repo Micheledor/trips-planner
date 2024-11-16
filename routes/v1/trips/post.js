@@ -16,7 +16,7 @@ export default async (fastify) => {
     if (bizResponse.statusCode !== 200) return res.code(bizResponse.statusCode).send(trip.msg);
 
     const [error, favouriteTrip] = await to(addFavouriteTrip(fastify.mongo, bizawayId, userId, trip));
-    if (error) res.code(400).send('Error saving favourite trip');
+    if (error) return res.code(400).send('Error saving favourite trip');
 
     return res.code(200).send(favouriteTrip);
   });
