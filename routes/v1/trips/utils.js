@@ -1,7 +1,7 @@
 const buildURL = (req) => {
   if (req.method === 'GET') {
-    const { origin, destination, sort_by } = req.query;
-    return `${process.env.BIZAWAY_API_BASE_URL}?origin=${origin}&destination=${destination}&sort_by=${sort_by}`;
+    const { origin, destination } = req.query;
+    return `${process.env.BIZAWAY_API_BASE_URL}?origin=${origin}&destination=${destination}`;
   }
   const { bizaway_id } = req.body;
   return `${process.env.BIZAWAY_API_BASE_URL}/${bizaway_id}`;

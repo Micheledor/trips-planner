@@ -17,7 +17,7 @@ test('Utils', async (t) => {
     assert.strictEqual(config.options.method, 'GET');
     assert.strictEqual(config.options.headers['Content-Type'], 'application/json');
     assert.strictEqual(config.options.headers['x-api-key'], process.env.BIZAWAY_API_KEY);
-    assert.strictEqual(config.url, `${process.env.BIZAWAY_API_BASE_URL}?origin=NYC&destination=LAX&sort_by=cost`);
+    assert.strictEqual(config.url, `${process.env.BIZAWAY_API_BASE_URL}?origin=NYC&destination=LAX`);
   });
 
   await t.test('buildConfig should return correct config for non-GET requests', () => {
