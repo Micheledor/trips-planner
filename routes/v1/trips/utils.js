@@ -1,11 +1,10 @@
-
 const buildURL = (req) => {
   if (req.method === 'GET') {
-    const { origin, destination, sort_by } = req.query;
-    return `${process.env.API_BASE_URL}?origin=${origin}&destination=${destination}&sort_by=${sort_by}`;
+    const { origin, destination } = req.query;
+    return `${process.env.BIZAWAY_API_BASE_URL}?origin=${origin}&destination=${destination}`;
   }
   const { bizaway_id } = req.body;
-  return `${process.env.API_BASE_URL}/${bizaway_id}`;
+  return `${process.env.BIZAWAY_API_BASE_URL}/${bizaway_id}`;
 };
 
 export function buildConfig(req) {
@@ -14,7 +13,7 @@ export function buildConfig(req) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.API_KEY,
+        'x-api-key': process.env.BIZAWAY_API_KEY,
       },
     },
     url: buildURL(req),

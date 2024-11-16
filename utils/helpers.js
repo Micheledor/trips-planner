@@ -6,5 +6,4 @@ export async function loadSupportedLocations(mongo, locationCache) {
   if (error) throw error;
 
   locations.forEach((location) => locationCache[location.code] = location);
-
 };

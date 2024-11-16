@@ -27,7 +27,7 @@ const getTripsSchema = {
   },
 };
 
-const postTripsSchema = {
+const postTripSchema = {
   body: S.object()
     .prop('bizaway_id', S.string().required()),
   response: {
@@ -40,11 +40,12 @@ const postTripsSchema = {
         .prop('destination', S.string())
         .prop('cost', S.number())
         .prop('duration', S.number())
+        .prop('created_at', S.string())
         .prop('display_name', S.string()),
   },
 };
 
 export {
   getTripsSchema,
-  postTripsSchema
+  postTripSchema
 };
