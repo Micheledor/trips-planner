@@ -1,4 +1,4 @@
-export function getSupportedLocations(mongo, query) {
+export const getSupportedLocations = (mongo, query) => {
   const collection = mongo.db.collection('locations');
 
   return collection.find().toArray();

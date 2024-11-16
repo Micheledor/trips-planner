@@ -7,7 +7,7 @@ const buildURL = (req) => {
   return `${process.env.BIZAWAY_API_BASE_URL}/${bizaway_id}`;
 };
 
-export function buildConfig(req) {
+export const buildConfig = (req) => {
   return {
     options: {
       method: 'GET',
@@ -20,14 +20,39 @@ export function buildConfig(req) {
   };
 };
 
-// Check assigned schema default value
-export function sortResponse(trips, query) {
+export const sortResponse = (trips, query) => {
   const { sort_by } = query;
   return sort_by === 'cost' ? trips.sort((a, b) => a.cost - b.cost) : trips.sort((a, b) => a.duration - b.duration);
 };
 
-export function generateCacheKey(query) {
+export const generateCacheKey = (query) => {
   const { origin, destination, ...otherParams } = query;
   const paramsString = Object.entries(otherParams).sort().map(([key, value]) => `${key}=${value}`).join('&');
   return `${origin}-${destination}?${paramsString}`;
+};
+
+export const paginateResponse = (trips, query) => {
+  const page = parseInt(query.page) || 1;
+  const limit = parseInt(query.per_page) || 10;
+
+  const totalResults = trips.length;
+  const paginatedData = trips.slice((page - 1) * limit, page * limit);
+  return {
+    data: paginatedData,
+    page,
+    per_page: limit,
+    total_elements: totalResults,
+    total_pages: Math.ceil(totalResults / limit),
+  };
+};
+
+export const setCacheControl = (res, maxAge = 3600) => {
+  res.header('cache-control', `max-age=${maxAge}`);
+};
+
+export const validateLocationQuery = (query, locationCache) => {
+  if (query.origin === query.destination) return { code: 400, message: 'Origin and destination cannot be the same' };
+  if (!locationCache[query.origin]) return { code: 400, message: 'Invalid origin' };
+  if (!locationCache[query.destination]) return { code: 400, message: 'Invalid destination' };
+  return null;
 };

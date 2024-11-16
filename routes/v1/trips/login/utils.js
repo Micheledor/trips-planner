@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
 
-export function checkPassword(password, hash) {
+export const checkPassword = (password, hash) => {
   return bcrypt.compare(password, hash);
 };
 
-export function generateJwtToken(jwt, user) {
+export const generateJwtToken = (jwt, user) => {
   return jwt.sign({ id: user._id });
 };

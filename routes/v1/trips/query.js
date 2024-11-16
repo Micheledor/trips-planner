@@ -1,6 +1,6 @@
 import { ObjectId } from '@fastify/mongodb';
 
-export function addFavouriteTrip(mongo, bizaway_id, userId, body) {
+export const addFavouriteTrip = (mongo, bizaway_id, userId, body) => {
   const collection = mongo.db.collection('favourites');
   delete body.id;
   delete body.bizaway_id;

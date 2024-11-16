@@ -1,7 +1,7 @@
 import undici from 'undici';
 import { to } from 'await-to-js';
 import { getTripsSchema } from './schema.js';
-import { buildConfig, sortResponse, generateCacheKey } from './utils.js';
+import { buildConfig, sortResponse, generateCacheKey, paginateResponse, setCacheControl, validateLocationQuery } from './utils.js';
 
 let cache = {};
 
@@ -9,22 +9,16 @@ export default async (fastify) => {
   fastify.get('/iamalive', async (_, res) => res.code(200).send('ok'));
 
   fastify.get('/', { schema: getTripsSchema }, async (req, res) => {
-    const { query } = req;
     const { locationCache } = fastify;
+    const { query } = req;
 
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.per_page) || 10;
-
-    if (query.origin === query.destination) return res.code(400).send('Origin and destination cannot be the same');
-    if (!locationCache[query.origin]) return res.code(400).send('Invalid origin');
-    if (!locationCache[query.destination]) return res.code(400).send('Invalid destination');
+    const validationError = validateLocationQuery(query, locationCache);
+    if (validationError) return res.code(validationError.code).send({ message: validationError.message });
 
     const cacheKey = generateCacheKey(query);
-    res.header('cache-control', 'max-age=3600');
+    setCacheControl(res);
 
-    if (cache[cacheKey]) {
-      return res.code(200).send(cache[cacheKey]);
-    }
+    if (cache[cacheKey]) return res.code(200).send(cache[cacheKey]);
 
     const requestConfig = buildConfig(req);
 
@@ -35,16 +29,7 @@ export default async (fastify) => {
 
     const sortedTrips = sortResponse(trips, query);
 
-    const totalResults = sortedTrips.length;
-    const paginatedData = sortedTrips.slice((page - 1) * limit, page * limit);
-
-    const paginatedResponse = {
-      data: paginatedData,
-      page,
-      per_page: limit,
-      total_elements: totalResults,
-      total_pages: Math.ceil(totalResults / limit),
-    };
+    const paginatedResponse = paginateResponse(sortedTrips, query, trips.length);
 
     cache[cacheKey] = paginatedResponse;
 
