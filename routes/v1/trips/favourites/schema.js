@@ -14,7 +14,6 @@ const getFavouriteTripsSchema = {
           .prop('cost', S.number())
           .prop('duration', S.number())
           .prop('display_name', S.string())
-          .prop('created_at', S.string())
       ),
   },
 };

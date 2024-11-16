@@ -1,7 +1,10 @@
-export function addFavouriteTrip(mongo, bizaway_id, body) {
+import { ObjectId } from '@fastify/mongodb';
+
+export function addFavouriteTrip(mongo, bizaway_id, userId, body) {
   const collection = mongo.db.collection('favourites');
   delete body.id;
   delete body.bizaway_id;
+
 
   const result = collection.findOneAndUpdate(
     {
@@ -12,11 +15,14 @@ export function addFavouriteTrip(mongo, bizaway_id, body) {
         bizaway_id,
         ...body,
       },
-      $setOnInsert: { created_at: new Date() },
+      $addToSet: {
+        user_ids: new ObjectId(userId),
+      },
     },
     {
       upsert: true,
       returnDocument: 'after',
+      projection: { user_ids: 0 },
     },
   );
 

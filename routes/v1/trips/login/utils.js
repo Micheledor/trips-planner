@@ -5,5 +5,5 @@ export function checkPassword(password, hash) {
 };
 
 export function generateJwtToken(jwt, user) {
-  return jwt.sign({ user_id: user._id });
+  return jwt.sign({ id: user._id });
 };
