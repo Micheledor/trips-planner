@@ -1,6 +1,7 @@
 import S from 'fluent-json-schema';
 
 const getDetailedTripSchema = {
+  security: [{ bearerAuth: [] }],
   params: S.object()
     .prop('id', S.string().required()),
   response: {
