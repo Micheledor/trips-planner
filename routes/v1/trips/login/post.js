@@ -8,12 +8,12 @@ export default async (fastify) => {
     const { email, password } = req.body;
 
     const [err, user] = await to(getUserByEmail(fastify.mongo, email));
-    if (err) return res.code(500).send({ error: 'Internal Server Error' });
-    if (!user) return res.code(401).send({ error: 'Unauthorized' });
+    if (err) return res.code(500).send({ message: 'Internal Server Error' });
+    if (!user) return res.code(401).send({ message: 'Unauthorized' });
 
     const [passwordErr, isPasswordCorrect] = await to(checkPassword(password, user.password));
-    if (passwordErr) return res.code(500).send({ error: 'Internal Server Error' });
-    if (!isPasswordCorrect) return res.code(401).send({ error: 'Unauthorized' });
+    if (passwordErr) return res.code(500).send({ message: 'Internal Server Error' });
+    if (!isPasswordCorrect) return res.code(401).send({ message: 'Unauthorized' });
 
     const token = generateJwtToken(fastify.jwt, user);
 

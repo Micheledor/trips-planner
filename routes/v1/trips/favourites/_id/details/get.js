@@ -10,7 +10,7 @@ export default async (fastify) => {
     const { locationCache } = fastify;
 
     const [_, trip] = await to(getFavouriteTrip(fastify.mongo, tripId, userId));
-    if (!trip) return res.code(404).send('Trip not found');
+    if (!trip) return res.code(404).send({ message: 'Trip not found' });
 
     const formattedResponse = formatResponse(locationCache, trip);
 

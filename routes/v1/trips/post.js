@@ -13,10 +13,10 @@ export default async (fastify) => {
 
     const [_error, bizResponse] = await to(undici.request(requestConfig.url, requestConfig.options));
     const [__error, trip] = await to(bizResponse.body.json());
-    if (bizResponse.statusCode !== 200) return res.code(bizResponse.statusCode).send(trip.msg);
+    if (bizResponse.statusCode !== 200) return res.code(bizResponse.statusCode).send({ message: trip.msg });
 
     const [error, favouriteTrip] = await to(addFavouriteTrip(fastify.mongo, bizawayId, userId, trip));
-    if (error) return res.code(400).send('Error saving favourite trip');
+    if (error) return res.code(500).send({ message: error });
 
     return res.code(200).send(favouriteTrip);
   });

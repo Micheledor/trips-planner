@@ -9,13 +9,13 @@ export default async (fastify) => {
     const { email, password } = req.body;
 
     const [error, user] = await to(getUserByEmail(fastify.mongo, email));
-    if (error) return res.code(400).send('Error fetching user');
-    if (user) return res.code(400).send('User already exists');
+    if (error) return res.code(500).send({ message: 'Internal Server Error' });
+    if (user) return res.code(409).send({ message: 'User already exists' });
 
     const [_, hashedPassword] = await to(hashPassword(password));
 
     const [createError, newUser] = await to(createUser(fastify.mongo, email, hashedPassword));
-    if (createError) return res.code(400).send('Error creating user');
+    if (createError) return res.code(500).send({ message: 'Internal Server Error' });
 
     const token = fastify.jwt.sign({ username: newUser.username });
 

@@ -1,6 +1,7 @@
 import { ObjectId } from '@fastify/mongodb';
 
 export async function removeFavouriteTrip(mongo, tripId, userId) {
+  if (!ObjectId.isValid(tripId)) throw Error('Invalid trip ID');
   const collection = mongo.db.collection('favourites');
 
   const result = await collection.findOneAndUpdate(

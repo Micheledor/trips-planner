@@ -8,7 +8,7 @@ export default async (fastify) => {
     const userId = req.user.id;
 
     const [err, _] = await to(removeFavouriteTrip(fastify.mongo, tripId, userId));
-    if (err) return res.code(404).send(err);
+    if (err) return res.code(500).send({ message: err });
 
     return res.code(204).send('Trip succesfully deleted');
   });
