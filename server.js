@@ -62,12 +62,11 @@ export default async function createServer() {
     },
   });
 
-  // Register Swagger UI
   app.register(swaggerUi, {
-    routePrefix: '/documentation', // Matches the documentation path
+    routePrefix: '/documentation',
     exposeRoute: true,
-    staticCSP: true, // Ensures static assets are served correctly
-    transformStatic: false, // Prevents additional transformations of static routes
+    staticCSP: true,
+    transformStatic: false,
     uiConfig: {
       deepLinking: true,
     },
@@ -78,7 +77,7 @@ export default async function createServer() {
       },
       servers: [
         {
-          url: 'http://localhost:3000/v1/trips', // Matches base path
+          url: 'http://localhost:3000/v1/trips',
         },
       ],
       components: {
