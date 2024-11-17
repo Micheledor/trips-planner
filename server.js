@@ -3,6 +3,9 @@ import fastify from 'fastify';
 import autoload from '@fastify/autoload';
 import fastifyJwt from '@fastify/jwt';
 import mongo from '@fastify/mongodb';
+import cors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { loadSupportedLocations, verifyJwt } from './utils/helpers.js';
@@ -28,8 +31,66 @@ export default async function createServer() {
   });
 
   app.decorate('locationCache', locationCache);
+  app.decorate('authenticate', verifyJwt);
 
-  app.decorate('authorize', verifyJwt);
+  app.register(cors);
+
+  app.register(swagger, {
+    host: 'localhost:3000',
+    basePath: '/v1/trips',
+    routePrefix: '/documentation',
+    exposeRoute: true,
+    openapi: {
+      info: {
+        title: 'Trips Planner API',
+        version: '1.0.0',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000/v1/trips',
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+    },
+  });
+
+  app.register(swaggerUi, {
+    routePrefix: '/documentation',
+    exposeRoute: true,
+    staticCSP: true,
+    transformStatic: false,
+    uiConfig: {
+      deepLinking: true,
+    },
+    openapi: {
+      info: {
+        title: 'Trips Planner API',
+        version: '1.0.0',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000/v1/trips',
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+    },
+  });
 
   app.register(autoload, {
     dir: path.join(__dirname, 'routes'),

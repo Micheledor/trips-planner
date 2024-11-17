@@ -5,7 +5,7 @@ import { addFavouriteTrip } from './query.js';
 import { buildConfig } from './utils.js'
 
 export default async (fastify) => {
-  fastify.post('/', { preHandler: fastify.authorize, schema: postTripSchema }, async (req, res) => {
+  fastify.post('/', { preHandler: fastify.authenticate, schema: postTripSchema }, async (req, res) => {
     const bizawayId = req.body.bizaway_id;
     const userId = req.user.id;
 

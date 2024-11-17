@@ -4,7 +4,7 @@ import { getFavouriteTrips } from './query.js';
 
 
 export default async (fastify) => {
-  fastify.get('/', { preHandler: fastify.authorize, schema: getFavouriteTripsSchema }, async (req, res) => {
+  fastify.get('/', { preHandler: fastify.authenticate, schema: getFavouriteTripsSchema }, async (req, res) => {
     const userId = req.user.id;
 
     const [err, trips] = await to(getFavouriteTrips(fastify.mongo, userId));
