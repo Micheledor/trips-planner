@@ -2,6 +2,7 @@ import 'dotenv/config';
 import test from 'node:test';
 import assert from 'node:assert';
 import { buildConfig, sortResponse, generateCacheKey } from '../routes/v1/trips/utils.js';
+import { formatResponse } from '../routes/v1/trips/favourites/_id/details/utils.js';
 
 test('Utils', async (t) => {
   await t.test('buildConfig should return correct config for GET requests', () => {
@@ -163,5 +164,57 @@ test('Utils', async (t) => {
     const secondCacheKey = generateCacheKey(secondQuery);
 
     assert.notEqual(firstCacheKey, secondCacheKey);
+  });
+
+  await t.test('formatResponse should return correct response', () => {
+    const locationCache = {
+      BCN: {
+        location: {
+          coordinates: [2.1737, 41.3805],
+        },
+        city: 'Barcelona',
+        country: 'Spain',
+      },
+      ATL: {
+        location: {
+          coordinates: [-84.4318, 33.641],
+        },
+        city: 'Atlanta',
+        country: 'USA',
+      },
+    };
+
+    const trip = {
+      _id: '12345',
+      bizaway_id: '54321',
+      type: 'flight',
+      cost: 100,
+      duration: 3,
+      display_name: 'Flight from BCN to ATL',
+      origin: 'BCN',
+      destination: 'ATL',
+    };
+    const response = formatResponse(locationCache, trip);
+    assert.deepEqual(response, {
+      _id: '12345',
+      bizaway_id: '54321',
+      type: 'flight',
+      cost: 100,
+      duration: 3,
+      display_name: 'Flight from BCN to ATL',
+      origin_details: {
+        code: 'BCN',
+        city: 'Barcelona',
+        country: 'Spain',
+      },
+      destination_details: {
+        code: 'ATL',
+        city: 'Atlanta',
+        country: 'USA',
+      },
+      cost_per_km: '0.01',
+      distance_km: '7363.48',
+      carbon_footprint_kg: '662.71',
+    });
   });
 });
