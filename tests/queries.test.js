@@ -6,6 +6,7 @@ import { getSupportedLocations } from '../utils/query.js';
 import { addFavouriteTrip } from '../routes/v1/trips/query.js';
 import { getFavouriteTrips } from '../routes/v1/trips/favourites/query.js';
 import { removeFavouriteTrip } from '../routes/v1/trips/favourites/_id/query.js';
+import { getFavouriteTrip } from '../routes/v1/trips/favourites/_id/details/query.js';
 
 test('Queries', async (t) => {
   let server;
@@ -89,6 +90,15 @@ test('Queries', async (t) => {
 
     assert.strictEqual(err, null);
     assert.strictEqual(result.user_ids.length, 0);
+  });
+
+  await t.test('getFavouriteTrip should return trip (detailed trip util)', async () => {
+    const [err, result] = await to(
+      getFavouriteTrip(server.mongo, existingTripId, userId)
+    );
+
+    assert.strictEqual(err, null);
+    assert.strictEqual(result._id.toString(), existingTripId);
   });
 
   await t.test('after hook', async () => {

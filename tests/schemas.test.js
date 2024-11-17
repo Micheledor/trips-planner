@@ -3,6 +3,7 @@ import assert from 'node:assert';
 import { getTripsSchema, postTripSchema } from '.././routes/v1/trips/schema.js';
 import { getFavouriteTripsSchema } from '.././routes/v1/trips/favourites/schema.js';
 import { deleteFavouriteTripsSchema } from '.././routes/v1/trips/favourites/_id/schema.js';
+import { getDetailedTripSchema } from '.././routes/v1/trips/favourites/_id/details/schema.js';
 
 test('Schemas', async (t) => {
   await t.test('getTripsSchema should validate query', (t) => {
@@ -94,6 +95,35 @@ test('Schemas', async (t) => {
     assert.deepEqual(required, ['id']);
     assert.equal(properties.length, 1);
     assert.deepEqual(properties[0], { name: 'id', type: 'string' });
+  });
+
+  await t.test('getDetailedTripSchema should validate params', (t) => {
+    const params = getDetailedTripSchema.params._getState();
+    const { properties, required, type } = params;
+
+    assert.equal(type, 'object');
+    assert.deepEqual(required, ['id']);
+    assert.equal(properties.length, 1);
+    assert.deepEqual(properties[0], { name: 'id', type: 'string' });
+  });
+
+  await t.test('getDetailedTripSchema should validate response', (t) => {
+    const response = getDetailedTripSchema.response['200']._getState();
+    const { properties, type } = response;
+
+    assert.equal(type, 'object');
+    assert.equal(properties.length, 11);
+    assert.deepEqual(properties[0], { name: '_id', type: 'string' });
+    assert.deepEqual(properties[1], { name: 'bizaway_id', type: 'string' });
+    assert.deepEqual(properties[2], { name: 'type', type: 'string' });
+    assert.deepEqual(properties[3], { name: 'cost', type: 'number' });
+    assert.deepEqual(properties[4], { name: 'duration', type: 'number' });
+    assert.deepEqual(properties[5], { name: 'display_name', type: 'string' });
+    assert.deepEqual(properties[6].name, 'origin_details');
+    assert.deepEqual(properties[7].name, 'destination_details');
+    assert.deepEqual(properties[8], { name: 'cost_per_km', type: 'number' });
+    assert.deepEqual(properties[9], { name: 'distance_km', type: 'number' });
+    assert.deepEqual(properties[10], { name: 'carbon_footprint_kg', type: 'number' });
   });
 
   await t.test('deleteFavouriteTripsSchema should validate response', (t) => {

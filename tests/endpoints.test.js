@@ -226,6 +226,39 @@ test('Endpoints', async (t) => {
     assert.deepStrictEqual(JSON.parse(response.payload), expectedResponse);
   });
 
+  await t.test('GET trip details', async (t) => {
+    const response = await server.inject({
+      method: 'GET',
+      url: `/v1/trips/favourites/${createdTripId}/details`,
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    });
+
+    const expectedResponse = {
+      _id: createdTripId,
+      bizaway_id: '7ec09a82-547f-4a8c-b4bb-4902fa49d43d',
+      type: 'car',
+      cost: 2634,
+      duration: 1,
+      display_name: 'from BCN to DEL by car',
+      origin_details: {
+        code: 'BCN',
+        city: 'Barcelona',
+        country: 'Spain'
+      },
+      destination_details: {
+        code: 'DEL',
+        city: 'New Delhi',
+        country: 'India'
+      },
+      cost_per_km: 0.39,
+      distance_km: 6764.25,
+      carbon_footprint_kg: 1298.74
+    };
+
+    assert.strictEqual(response.statusCode, 200);
+    assert.deepStrictEqual(JSON.parse(response.payload), expectedResponse);
+  });
+
   await t.test('DELETE favourite trip - no token', async (t) => {
     const response = await server.inject({
       method: 'DELETE',
