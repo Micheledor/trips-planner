@@ -1,9 +1,10 @@
 import { to } from 'await-to-js';
 import { getUserByEmail } from './query.js';
 import { checkPassword, generateJwtToken } from './utils.js';
+import { loginUserSchema } from './schema.js';
 
 export default async (fastify) => {
-  fastify.post('/', async (req, res) => {
+  fastify.post('/', { schema: loginUserSchema }, async (req, res) => {
 
     const { email, password } = req.body;
 

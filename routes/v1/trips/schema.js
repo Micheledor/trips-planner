@@ -28,10 +28,11 @@ const getTripsSchema = {
 };
 
 const postTripSchema = {
+  security: [{ bearerAuth: [] }],
   body: S.object()
     .prop('bizaway_id', S.string().required()),
   response: {
-    201:
+    200:
       S.object()
         .prop('_id', S.string())
         .prop('bizaway_id', S.string())
