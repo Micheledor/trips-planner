@@ -4,7 +4,7 @@ import { getFavouriteTrip } from './query.js'
 import { formatResponse } from './utils.js'
 
 export default async (fastify) => {
-  fastify.get('/', { preHandler: fastify.authorize, schema: getDetailedTripSchema }, async (req, res) => {
+  fastify.get('/', { preHandler: fastify.authenticate, schema: getDetailedTripSchema }, async (req, res) => {
     const tripId = req.params.id;
     const userId = req.user.id;
     const { locationCache } = fastify;

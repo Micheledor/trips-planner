@@ -1,7 +1,7 @@
 import S from 'fluent-json-schema';
 
 const getFavouriteTripsSchema = {
-  // Potentially useful to add some queryparams here, like a sort_by
+  security: [{ bearerAuth: [] }],
   response: {
     200:
       S.array().items(

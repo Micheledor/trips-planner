@@ -3,7 +3,7 @@ import { deleteFavouriteTripsSchema } from './schema.js'
 import { removeFavouriteTrip } from './query.js'
 
 export default async (fastify) => {
-  fastify.delete('/', { preHandler: fastify.authorize, schema: deleteFavouriteTripsSchema }, async (req, res) => {
+  fastify.delete('/', { preHandler: fastify.authenticate, schema: deleteFavouriteTripsSchema }, async (req, res) => {
     const tripId = req.params.id;
     const userId = req.user.id;
 
