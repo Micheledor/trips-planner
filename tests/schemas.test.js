@@ -56,7 +56,7 @@ test('Schemas', async (t) => {
   });
 
   await t.test('postTripSchema should validate response', (t) => {
-    const response = postTripSchema.response['201']._getState();
+    const response = postTripSchema.response['200']._getState();
     const { properties, type } = response;
 
     assert.equal(type, 'object');
