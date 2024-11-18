@@ -22,6 +22,7 @@ export default async function createServer() {
 
   app.register(fastifyJwt, {
     secret: process.env.JWT_SECRET,
+    sign: { expiresIn: '1h' },
   });
 
   app.register(mongo, {
