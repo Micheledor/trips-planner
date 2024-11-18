@@ -5,12 +5,12 @@
 4. Make sure to copy the provided **.env** in the project's root directory.
 5. You're good to go: **Start the server**: `npm run start`
 6. You can start making requests using a test tool like Postman. You will see the **server address** in the console, by default the server uses port 3000, you can change it by modifying the .env `PORT` variable.
-7. To interact with the following routes:
+7. To interact with the following routes you will need to register and login(`localhost:{port}/documentation` to see how to populate the request):
   - POST favourite trip
   - GET favourite trips
   - GET detailed view of favourite trip
   - DELETE favourite trip
-  You will need to register and login(/register, /login), then pass the Bearer Token in the request's headers.
+
 
 # Endpoints documentation:
 Once you start the server, the endpoints documentation will be available browsing to `localhost:{port}/documentation`.
@@ -42,4 +42,7 @@ Once you start the server, the endpoints documentation will be available browsin
     4. **Performance optimization**: When users view their favorite trips, the data is served directly from the database, avoiding repeated calls to the 3rd-party API.
   2. Other endpoints using Mongo's ObjectIds: To provide security and independence from the 3rd-party system, while underlining the fact that the resource is an internal one.
 
-
+# Testing:
+  - To run the test suite: `npm run test`.
+  - Tests cover: utils, queries, schemas and endpoints.
+  - Endpoint tests interacting with the 3rd-party API mock calls. 
